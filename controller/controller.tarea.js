@@ -42,7 +42,11 @@ const viewTarea = async (req, res)=> {
             tarea
         })
     }catch (e) {
-
+        res.status(500).json({
+            ok: false,
+            e,
+            msg: 'error'
+        })
     }
 }
 module.exports = {createTarea, viewTarea}

@@ -74,7 +74,33 @@ const registerUser = async (req, res) => {
 
     }
 }
+
+const getUsers = async (req, res) => {
+    await User.sync()
+
+    const transaction = await sequelize.transaction();
+
+    try {
+        const users = await User.findAll();
+
+        res.status(201).json({
+            ok: true,
+            users
+        })
+    }
+
+    catch (e) {
+        res.status(500).json({
+            ok: false,
+            e,
+            msg: 'error'
+        })
+    }
+}
+
+
 module.exports = {
     loginUser,
-    registerUser
+    registerUser,
+    getUsers
 }

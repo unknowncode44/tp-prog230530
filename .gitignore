@@ -1,3 +1,10 @@
 /node_modules
+node_modules/body_parser
+node_modules/.bin
+node_modules/bytes
+
+/node_modules/body_parser
+/node_modules/.bin
+/node_modules/bytes
 
 .env
