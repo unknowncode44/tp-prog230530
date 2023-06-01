@@ -1,14 +1,15 @@
-require()
 const { Sequelize, Model, DataTypes } = require('sequelize') //? Sequilize para ORM
+const config = require('../config')
 
 const sequelize = new Sequelize(
-    process.env.DB_NAME.database, // ---> instanciamos la base de datos
-    process.env.DB_USER.user, // ---> le pasamos el nombre de usuario
-    process.env.DB_PASSWORD.password,  // ---> y la contraseña
+    config.database, // ---> instanciamos la base de datos
+    config.user, // ---> le pasamos el nombre de usuario
+    config.password,  // ---> y la contraseña
     {
-        host: process.env.DB_HOST, // ---> el host para la conexion
-        dialect: "mysql", // ---> el tipo de motor de busqueda
-        port: process.env.DB_PORT
+        host: config.host, // ---> el host para la conexion
+        dialect:'mysql',
+        dialectModule: require('mysql2'),
+        port: config.port
     }
 )
 
@@ -37,7 +38,7 @@ User.init(
             primaryKey: true, // ---> llave primaria
             autoIncrement: true // ---> auto_increment
         },
-        user: {
+        email: {
             type: DataTypes.STRING, // ---> tipo de dato string
             allowNull: false
         },

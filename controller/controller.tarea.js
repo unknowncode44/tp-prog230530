@@ -2,7 +2,6 @@ const { Tarea, sequelize} = require('../models/Model.tarea')
 
 const createTarea = async (req, res) => {
     await Tarea.sync()
-    console.log('toyaqui')
     const { title, description } = req.body;
     const transaction = await sequelize.transaction() //! Manejo de transacciones para consultas
 
@@ -32,7 +31,6 @@ const createTarea = async (req, res) => {
 }
 const viewTarea = async (req, res)=> {
     await Tarea.sync()
-    console.log('voy aca')
     
     const transaction = await sequelize.transaction()
 

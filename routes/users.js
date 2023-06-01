@@ -1,15 +1,10 @@
-var express = require('express');
-var { Router} = require('express');
-const router = Router();
+const { Router} = require('express');
+const {registerUser, loginUser } =require('../controller/user.controller')
 /* GET users listing. */
-router.post('/register', function(req, res, next) {
-  res.send('registro');
-});
-router.get('/login', function(req, res, next) {
-  res.send('login');
-});
-router.post('/login', function(req, res, next) {
-  res.send('login');
-});
+
+const router = Router();
+router.post('/register', registerUser)
+router.post('/login', loginUser)
+router.get('/get-users',)
 
 module.exports = router;
