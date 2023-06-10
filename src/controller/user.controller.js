@@ -1,5 +1,6 @@
-const { User, sequelize } = require('../models/Model.user')
-const bcrypt = require('bcrypt')
+const { User } = require('../models/Model.user')
+const sequelize = require('../database/database')
+const bcrypt = require('bcryptjs')
 
 const loginUser = async (req, res) => {
     await User.sync()
@@ -9,22 +10,22 @@ const loginUser = async (req, res) => {
         if (user === null) {
             res.status(404).json({
                 ok: false,
-                msg: 'Usuario no encontrado'
+                msg: 'User not found'
             })
         } else {
-            console.log('pase el if de nulo')
+            
             const hashPass = user.getDataValue('password')
 
             const validatePass = bcrypt.compareSync(password.toString(), hashPass)
             if (!validatePass) {
                 res.status(404).json({
                     ok: false,
-                    msg: 'Contraseña incorrecta!'
+                    msg: 'Incorrect password!'
                 })
             }
             res.status(200).json({
                 ok: true,
-                msg: 'Usuario logeado'
+                msg: 'Successful login'
             })
 
         }
@@ -32,7 +33,7 @@ const loginUser = async (req, res) => {
     } catch (e) {
         res.status(500).json({
             ok: false,
-            msg: 'Error en el servidor',
+            msg: 'Server error',
             e
         })
     }
@@ -41,16 +42,13 @@ const registerUser = async (req, res) => {
     await User.sync()
 
     const { email, password } = req.body;
-    const transaction = await sequelize.transaction() //! Manejo de transacciones para consultas
+    const transaction = await sequelize.transaction() //! Handle transactions
 
     try {
-        //? Encriptamos la contraseña
+        //? Password encrypt
         const salt = bcrypt.genSaltSync();
         const passwordHash = bcrypt.hashSync(password.toString(), salt)
-        const userDetails = {
-            email,
-            passwordHash
-        }
+        
         const user = await User.findOrCreate({
             where: { email },
             defaults: {
@@ -59,10 +57,10 @@ const registerUser = async (req, res) => {
             },
             transaction: transaction
         })
-        await transaction.commit() // Si todo OK, commitea los cambios
+        await transaction.commit() // Changes commit
         res.status(201).json({
             ok: true,
-            msg: 'Usuario creado con exito',
+            msg: 'User created',
             user
         })
 
@@ -78,8 +76,6 @@ const registerUser = async (req, res) => {
 const getUsers = async (req, res) => {
     await User.sync()
 
-    const transaction = await sequelize.transaction();
-
     try {
         const users = await User.findAll();
 
@@ -93,7 +89,7 @@ const getUsers = async (req, res) => {
         res.status(500).json({
             ok: false,
             e,
-            msg: 'error'
+            msg: 'Error'
         })
     }
 }

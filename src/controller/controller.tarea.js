@@ -1,4 +1,5 @@
-const { Tarea, sequelize} = require('../models/Model.tarea')
+const { Tarea } = require('../models/Model.tarea')
+const sequelize = require('../database/database')
 
 const createTarea = async (req, res) => {
     await Tarea.sync()
@@ -49,4 +50,5 @@ const viewTarea = async (req, res)=> {
         })
     }
 }
+
 module.exports = {createTarea, viewTarea}
