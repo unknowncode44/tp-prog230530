@@ -1,6 +1,8 @@
 const { User } = require('../models/Model.user')
 const sequelize = require('../database/database')
 const bcrypt = require('bcryptjs')
+const { tokenSign } = require('../helpers/generateToken')
+
 
 const loginUser = async (req, res) => {
     await User.sync()
@@ -23,9 +25,13 @@ const loginUser = async (req, res) => {
                     msg: 'Incorrect password!'
                 })
             }
+            const confirmedemail = user.email
+            const id_user = user.id
+            const token = await tokenSign(id_user,confirmedemail)
             res.status(200).json({
                 ok: true,
-                msg: 'Successful login'
+                msg: 'Successful login',
+                token
             })
 
         }
@@ -58,10 +64,13 @@ const registerUser = async (req, res) => {
             transaction: transaction
         })
         await transaction.commit() // Changes commit
+        const confirmedemail = user.email
+        const id_user = user.id
+        const token = await tokenSign(id_user,confirmedemail)
         res.status(201).json({
             ok: true,
             msg: 'User created',
-            user
+            token
         })
 
     } catch (e) {
