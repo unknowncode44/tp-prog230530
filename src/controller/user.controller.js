@@ -1,4 +1,4 @@
-const { User } = require('../models/Model.user')
+const { User } = require('../models/model.user')
 const sequelize = require('../database/database')
 const bcrypt = require('bcryptjs')
 const { tokenSign } = require('../helpers/generateToken')
@@ -47,7 +47,7 @@ const loginUser = async (req, res) => {
 const registerUser = async (req, res) => {
     await User.sync()
 
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
     const transaction = await sequelize.transaction() //! Handle transactions
 
     try {
@@ -59,7 +59,8 @@ const registerUser = async (req, res) => {
             where: { email },
             defaults: {
                 email: email,
-                password: passwordHash
+                password: passwordHash,
+                role: role
             },
             transaction: transaction
         })
@@ -103,9 +104,38 @@ const getUsers = async (req, res) => {
     }
 }
 
+const update = async (req, res) => {
+    const id = req.params.id
+    // If the values are undefined, don't update the data
+    const user = { email: req.body.email, password: req.body.password, role: req.body.role }
+    console.log(user, id);
+    const t = await sequelize.transaction()
+    try {
+        const result = await User.update(
+            { user },
+            { where: { id: id } },
+            { transaction: t }
+        )
+        res.status(200).json({
+            ok: true,
+            result,
+            msg: 'approved'
+        })
+        await t.commit()
+    }
+    catch(e) {
+        res.status(500).json({
+            ok: false,
+            e,
+            msg: 'rejected'
+        })
+        await t.rollback()
+    }
+}
 
 module.exports = {
     loginUser,
     registerUser,
-    getUsers
+    getUsers,
+    update
 }
