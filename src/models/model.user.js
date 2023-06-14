@@ -1,4 +1,4 @@
-const { Model, DataTypes } = require('sequelize') //? Sequilize para ORM
+const { Model, DataTypes } = require('sequelize') //? Sequelize for ORM
 const sequelize = require('../database/database')
 
 //? Model class
@@ -21,6 +21,11 @@ User.init(
             type: DataTypes.STRING, // ---> Data type string
             allowNull: false // ---> not null
         },
+        role: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: 'STUDENT'
+        }
     }, {
         sequelize,
         modelName: 'User' //! Model name

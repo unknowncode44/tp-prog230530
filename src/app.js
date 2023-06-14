@@ -1,8 +1,9 @@
 const express = require('express')
 
 //* Routes import:
-const tareaRoute = require('./routes/tareas')
-const userRoute = require('./routes/users')
+const tareaRoute = require('./routes/tareas.routes')
+const userRoute = require('./routes/users.routes')
+const materiaRoute = require('./routes/materia.routes')
 
 const app = express()
 
@@ -21,7 +22,8 @@ app.use(require('morgan')('dev'))
 app.use(
   //? Routes:
   tareaRoute,
-  userRoute
+  userRoute,
+  materiaRoute
 )
 
 module.exports = app
