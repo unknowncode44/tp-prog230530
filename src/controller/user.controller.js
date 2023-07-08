@@ -15,9 +15,9 @@ const loginUser = async (req, res) => {
                 msg: 'User not found'
             })
         } else {
-            
+            // Get user password
             const hashPass = user.getDataValue('password')
-
+            //Compare password
             const validatePass = bcrypt.compareSync(password.toString(), hashPass)
             if (!validatePass) {
                 res.status(404).json({
@@ -25,17 +25,19 @@ const loginUser = async (req, res) => {
                     msg: 'Incorrect password!'
                 })
             }
+            //Get email
             const confirmedemail = user.email
+            //User id
             const id_user = user.id
+            //Generate the token
             const token = await tokenSign(id_user,confirmedemail)
             res.status(200).json({
                 ok: true,
                 msg: 'Successful login',
-                token
+                token,
+                data: user
             })
-
         }
-
     } catch (e) {
         res.status(500).json({
             ok: false,
@@ -44,17 +46,15 @@ const loginUser = async (req, res) => {
         })
     }
 }
+
 const registerUser = async (req, res) => {
     await User.sync()
-
     const { email, password, role } = req.body;
     const transaction = await sequelize.transaction() //! Handle transactions
-
     try {
         //? Password encrypt
         const salt = bcrypt.genSaltSync();
         const passwordHash = bcrypt.hashSync(password.toString(), salt)
-        
         const user = await User.findOrCreate({
             where: { email },
             defaults: {
@@ -64,7 +64,6 @@ const registerUser = async (req, res) => {
             },
             transaction: transaction
         })
-        await transaction.commit() // Changes commit
         const confirmedemail = user.email
         const id_user = user.id
         const token = await tokenSign(id_user,confirmedemail)
@@ -73,28 +72,24 @@ const registerUser = async (req, res) => {
             msg: 'User created',
             token
         })
-
+        await transaction.commit() // Changes commit
     } catch (e) {
         res.status(500).json({
             ok: false,
             e
         })
-
     }
 }
 
 const getUsers = async (req, res) => {
     await User.sync()
-
     try {
-        const users = await User.findAll();
-
+        const users = await User.findAll() // Get all users
         res.status(201).json({
             ok: true,
             users
         })
     }
-
     catch (e) {
         res.status(500).json({
             ok: false,

@@ -4,6 +4,7 @@ const express = require('express')
 const tareaRoute = require('./routes/tareas.routes')
 const userRoute = require('./routes/users.routes')
 const materiaRoute = require('./routes/materia.routes')
+const inscriptionsRoute = require('./routes/inscriptions.routes')
 
 const app = express()
 
@@ -23,7 +24,8 @@ app.use(
   //? Routes:
   tareaRoute,
   userRoute,
-  materiaRoute
+  materiaRoute,
+  inscriptionsRoute
 )
 
 module.exports = app

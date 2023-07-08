@@ -1,4 +1,4 @@
-const { MateriaStudent } = require('../models/model.materia.student')
+const { Inscriptions } = require('../models/model.inscription')
 const sequelize = require('../database/database')
 const { Materia } = require('../models/model.materia')
 
@@ -6,9 +6,9 @@ const inscription = async (req, res) => {
     const inscription = { student_id: req.body.student_id, materia_id: req.body.materia_id }
     const transaction = await sequelize.transaction()
     try {
-        MateriaStudent.sync()
+        Inscriptions.sync({ force: true })
         
-        const result = await MateriaStudent.create(inscription)
+        const result = await Inscriptions.create(inscription)
         res.status(200).json({
             ok: true,
             result,
@@ -31,7 +31,7 @@ const update = async (req, res) => {
     const inscription = { student_id: req.body.student_id, materia_id: req.body.materia_id }
     const transaction = await sequelize.transaction()
     try {
-        const result = await MateriaStudent.update(
+        const result = await Inscriptions.update(
             { inscription }, 
             { where: { id: id } },
             { transaction: transaction }
@@ -57,7 +57,7 @@ const unsubscribe = async (req, res) => {
     const id = req.params.id
     const transaction = await sequelize.transaction()
     try {
-        const result = await MateriaStudent.destroy(
+        const result = await Inscriptions.destroy(
             { where: { id: id } }, 
             { transaction: transaction }
         )
@@ -81,14 +81,14 @@ const unsubscribe = async (req, res) => {
 const getInscriptions = async (req, res) => {
     const id = req.params.id
     try {
-        const result = await MateriaStudent.findAll(
+        const result = await Inscriptions.findAll(
             //Inner join
-            { include: { model: Materia, required: true, as: 'Materia' } },
-            { where: { student_id: id } }
+            { include: Materia }
         )
         res.status(200).json({
             ok: true,
-            result,msg: 'approved'
+            result,
+            msg: 'approved'
         })
     }
     catch(e) {

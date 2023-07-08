@@ -24,5 +24,6 @@ async function testConnection() {
 }
 
 testConnection()
+//sequelize.drop()
 
 module.exports = sequelize

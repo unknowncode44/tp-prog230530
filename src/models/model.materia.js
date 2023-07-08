@@ -27,5 +27,6 @@ Materia.init(
         modelName: 'Materia'
     }
 )
+Materia.hasOne(User) // One-To-One relation
 
 module.exports = { Materia }

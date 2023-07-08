@@ -26,11 +26,13 @@ Tarea.init(
             allowNull: false,
             defaultValue: 'pendiente'
         },
+        score: {
+            type: DataTypes.INTEGER
+        }
     }, {
         sequelize,
         modelName: 'Tarea' //! Model name
     }
 )
-
 
 module.exports = { Tarea }

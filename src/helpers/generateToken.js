@@ -3,18 +3,19 @@ const JWT_SECRET = `${process.env.JWT_SECRET}`
 
 
 const tokenSign = async (id_user, confirmedemail) => {
-    const sign = jwt.sign({
+    const payload = {
         id: id_user,
         email: confirmedemail
-    },
+    }
+    const sign = jwt.sign(payload,
     JWT_SECRET,
     {
-        expiresIn: "24h",
+        expiresIn: "24h", // Expiration time
     });
-    //Lo retornamos 
-    console.log(sign)
+    // Return generated token
     return sign
-};
+}
+
 module.exports = {
     tokenSign
 }

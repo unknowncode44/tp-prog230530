@@ -3,9 +3,9 @@ const sequelize = require('../database/database')
 const { User } = require('./model.user')
 const { Materia } = require('./model.materia')
 
-class MateriaStudent extends Model {  }
+class Inscriptions extends Model {  }
 
-MateriaStudent.init(
+Inscriptions.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -28,8 +28,10 @@ MateriaStudent.init(
         }
     }, {
         sequelize,
-        modelName: 'MateriaStudent'
+        modelName: 'Inscriptions'
     }
 )
+User.belongsToMany(Materia, { through: Inscriptions })
+Materia.belongsToMany(User, { through: Inscriptions })
 
-module.exports = { MateriaStudent }
+module.exports = { Inscriptions }
